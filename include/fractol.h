@@ -21,7 +21,7 @@ typedef struct	s_data {
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-	int		zoom;
+	double		zoom;
 }				t_data;
 
 // fractol.c

@@ -27,12 +27,12 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 int	create_trgb(int t, int r, int g, int b, int iter)
 {
 	t = 0;
-	r = iter;
-	g = iter;
-	b = iter;
-	r *= 10;
-	g *= 15;
-	b *= 20;
+	//r = iter;
+	//g = iter;
+	//b = iter;
+	r *= iter;
+	g *= iter;
+	b *= iter;
 	r %= 256;
 	g %= 256;
 	b %= 256;
@@ -42,47 +42,43 @@ int	create_trgb(int t, int r, int g, int b, int iter)
 
 void	render(t_data *vars, int d)
 {
+	if (d == 5)
+	{
 		mlx_clear_window(vars->mlx, vars->win);
+		vars->zoom += 1;
+		fractol(vars);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
+	}
+	else if (d == 4)
+	{
+		mlx_clear_window(vars->mlx, vars->win);
+		vars->zoom -= 1;
+		fractol(vars);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
+	}
 }
 
-int	mouse_hook(int keycode, t_data *vars)
+int	mouse_hook(int keycode, int x, int y, t_data *vars)
 {
-	printf("Hello from key_hook!\n");
-	render(vars, 2);
+	printf("Hello from key_hook!%d\n", keycode);
+	render(vars, keycode);
 	return (0);
 }
 
-// int	main(void)
-// {
-// 	t_data	vars;
-
-// 	vars.mlx = mlx_init();
-// 	vars.win = mlx_new_window(vars.mlx, 1080, 600, "MTU");
-// 	vars.img = mlx_new_image(vars.mlx, 1080, 600);
-// 	vars.addr = mlx_get_data_addr(vars.img, &vars.bits_per_pixel, &vars.line_length,
-// 								&vars.endian);
-// 	vars.zoom = 2;
-// 	fractol(&vars);
-// 	mlx_put_image_to_window(vars.mlx, vars.win, vars.img, 0, 0);
-// 	mlx_mouse_hook(vars.win, mouse_hook, &vars);
-// 	mlx_loop(vars.mlx);
-// }
-
 int	main(void)
 {
-	t_data	*vars;
+	t_data	vars;
 
-	vars = malloc(sizeof(t_data));
-	vars->mlx = mlx_init();
-	vars->win = mlx_new_window(vars->mlx, 1080, 600, "MTU");
-	vars->img = mlx_new_image(vars->mlx, 1080, 600);
-	vars->addr = mlx_get_data_addr(vars->img, &vars->bits_per_pixel, &vars->line_length,
-								&vars->endian);
-	vars->zoom = 2;
-	fractol(vars);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
-	mlx_mouse_hook(vars->win, mouse_hook, vars);
-	mlx_loop(vars->mlx);
+	vars.mlx = mlx_init();
+	vars.win = mlx_new_window(vars.mlx, 500, 400, "MTU");
+	vars.img = mlx_new_image(vars.mlx, 500, 400);
+	vars.addr = mlx_get_data_addr(vars.img, &vars.bits_per_pixel, &vars.line_length,
+								&vars.endian);
+	vars.zoom = 3;
+	fractol(&vars);
+	mlx_put_image_to_window(vars.mlx, vars.win, vars.img, 0, 0);
+	mlx_mouse_hook(vars.win, mouse_hook, &vars);
+	mlx_loop(vars.mlx);
 }
 
 void	fractol(t_data *img)
@@ -94,14 +90,14 @@ void	fractol(t_data *img)
 	
 	row = 0;
 	col = 0;
-	width = 1080;
-	height = 600;
-	while (row < 600)
+	width = 500;
+	height = 400;
+	while (row < 400)
 	{
-		while (col < 1080)
+		while (col < 500)
 		{
-	    double c_re = (col - width/img->zoom)*4.0/width;
-	    double c_im = (row - height/img->zoom)*4.0/width;
+	    double c_re = (col - width/2)*img->zoom/width;
+	    double c_im = (row - height/2)*img->zoom/width;
 	    double x = 0, y = 0;
 	    int iteration = 0;
 	    while (x*x+y*y <= 4 && iteration < 255) {
@@ -111,7 +107,9 @@ void	fractol(t_data *img)
 	        iteration++;
 	    }
 	    if (iteration < 255)
-				my_mlx_pixel_put(img, col, row, create_trgb(255, 255, 255, 255, iteration));
+				my_mlx_pixel_put(img, col, row, create_trgb(255, 150, 50, 25, iteration));
+		else 
+			my_mlx_pixel_put(img, col, row, create_trgb(255, 0, 0, 0, 0));
 			col++;
 		}
 		col = 0;
