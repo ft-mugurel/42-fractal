@@ -14,18 +14,19 @@
 # define FRACTOL_H
 
 typedef struct	s_data {
+	void	*mlx;
+	void	*win;
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		zoom;
 }				t_data;
 
-typedef struct	s_vars {
-	void	*mlx;
-	void	*win;
-}				t_vars;
+// fractol.c
 
 void	fractol(t_data *img);
+void	render(t_data *data, int d);
 
 #endif

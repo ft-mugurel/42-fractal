@@ -12,6 +12,8 @@
 
 #include "../lib/mlx_lib/mlx.h"
 #include "fractol.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -24,7 +26,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 int	create_trgb(int t, int r, int g, int b, int iter)
 {
-	t = 180;
+	t = 0;
 	r = iter;
 	g = iter;
 	b = iter;
@@ -38,19 +40,49 @@ int	create_trgb(int t, int r, int g, int b, int iter)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
+void	render(t_data *vars, int d)
+{
+		mlx_clear_window(vars->mlx, vars->win);
+}
+
+int	mouse_hook(int keycode, t_data *vars)
+{
+	printf("Hello from key_hook!\n");
+	render(vars, 2);
+	return (0);
+}
+
+// int	main(void)
+// {
+// 	t_data	vars;
+
+// 	vars.mlx = mlx_init();
+// 	vars.win = mlx_new_window(vars.mlx, 1080, 600, "MTU");
+// 	vars.img = mlx_new_image(vars.mlx, 1080, 600);
+// 	vars.addr = mlx_get_data_addr(vars.img, &vars.bits_per_pixel, &vars.line_length,
+// 								&vars.endian);
+// 	vars.zoom = 2;
+// 	fractol(&vars);
+// 	mlx_put_image_to_window(vars.mlx, vars.win, vars.img, 0, 0);
+// 	mlx_mouse_hook(vars.win, mouse_hook, &vars);
+// 	mlx_loop(vars.mlx);
+// }
+
 int	main(void)
 {
-	t_data	img;
-	t_vars	vars;
+	t_data	*vars;
 
-	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, 1080, 600, "MTU");
-	img.img = mlx_new_image(vars.mlx, 1080, 600);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	fractol(&img);
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
-	mlx_loop(vars.mlx);
+	vars = malloc(sizeof(t_data));
+	vars->mlx = mlx_init();
+	vars->win = mlx_new_window(vars->mlx, 1080, 600, "MTU");
+	vars->img = mlx_new_image(vars->mlx, 1080, 600);
+	vars->addr = mlx_get_data_addr(vars->img, &vars->bits_per_pixel, &vars->line_length,
+								&vars->endian);
+	vars->zoom = 2;
+	fractol(vars);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
+	mlx_mouse_hook(vars->win, mouse_hook, vars);
+	mlx_loop(vars->mlx);
 }
 
 void	fractol(t_data *img)
@@ -68,8 +100,8 @@ void	fractol(t_data *img)
 	{
 		while (col < 1080)
 		{
-	    double c_re = (col - width/2.0)*4.0/width;
-	    double c_im = (row - height/2.0)*4.0/width;
+	    double c_re = (col - width/img->zoom)*4.0/width;
+	    double c_im = (row - height/img->zoom)*4.0/width;
 	    double x = 0, y = 0;
 	    int iteration = 0;
 	    while (x*x+y*y <= 4 && iteration < 255) {

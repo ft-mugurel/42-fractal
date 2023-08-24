@@ -14,8 +14,8 @@ SRCS = ./src/fractol.c
 SRCBS = 
 NAME = fractol
 CC = gcc
-CFLAGS =  -g
-LFLAGS = -lXext -lX11 -lm -lz -L./lib/mlx_lib -lmlx -I./include/
+CFLAGS =  -g -fsanitize=address
+LFLAGS =  -lmlx -framework OpenGL -framework AppKit -L./lib/mlx_lib -lmlx -I./include/
 MLX = ./lib/mlx_lib/libmlx.a
 FT_PRINTF = ./lib/ft_printf/libftprintf.a
 GET_NEXT_LINE = ./lib/get_next_line/get_next_line.c ./lib/get_next_line/get_next_line_utils.c
@@ -31,17 +31,17 @@ bonus : $(SRCBS) $(MLX) $(FT_PRINTF) $(GET_NEXT_LINE)
 	@gcc $(CFLAGS) $(LFLAGS) $(SRCBS) $(FT_PRINTF) $(GET_NEXT_LINE) -o $(NAME)
 
 $(MLX) :
-	@make -C ./mlx_lib
+	@make -C ./lib/mlx_lib
 
 $(FT_PRINTF) :
-	@make -C ./ft_printf
+	@make -C ./lib/ft_printf
 
 clean:
 
 fclean: clean
 	@rm -rf $(NAME)
-	@make clean -C ./mlx_lib
-	@make fclean -C ./ft_printf
+	@make clean -C ./lib/mlx_lib
+	@make fclean -C ./lib/ft_printf
 
 re: fclean all
 
