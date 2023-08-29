@@ -25,25 +25,24 @@ int	mouse_hook(int keycode, int x, int y, t_data *vars)
 
 int	key_hook(int keycode, t_data *v)
 {
-	printf("%d\n", keycode);
-	if (keycode == 65307)
+	if (keycode == 53)
 	{
 		mlx_destroy_window(v->mlx, v->win);
 		exit(0);
 	}
-	else if (keycode == 65363)
+	else if (keycode == 124)
 		right_arrow(v);
-	else if (keycode == 65361)
+	else if (keycode == 123)
 		left_arrow(v);
-	else if (keycode == 65362)
+	else if (keycode == 126)
 		up_arrow(v);
-	else if (keycode == 65364)
+	else if (keycode == 125)
 		down_arrow(v);
-	else if (keycode == 114)
+	else if (keycode == 15)
 		color_change(keycode, v);
-	else if (keycode == 103)
+	else if (keycode == 5)
 		color_change(keycode, v);
-	else if (keycode == 98)
+	else if (keycode == 11)
 		color_change(keycode, v);
 	else
 		change_dimention(keycode, v);
@@ -53,25 +52,4 @@ int	key_hook(int keycode, t_data *v)
 int	close_fractol(void)
 {
 	exit(0);
-}
-
-int	handle_motion(int x, int y, t_data *v)
-{
-	double	x_d;
-	double	y_d;
-
-	x_d = v->cursor_x - x;
-	y_d = v->cursor_y - y;
-	if (x_d != 0 && y_d != 0)
-	{
-		v->max_x = v->max_x + (x_d / (WIDTH / (v->max_x + v->min_x * -1)));
-		v->min_x = v->min_x + (x_d / (WIDTH / (v->max_x + v->min_x * -1)));
-		v->max_y = v->max_y + (y_d / (HEIGHT / (v->max_y + v->min_y * -1)));
-		v->min_y = v->min_y + (y_d / (HEIGHT / (v->max_y + v->min_y * -1)));
-	}
-	v->cursor_x = x;
-	v->cursor_y = y;
-	fractol(v);
-	mlx_put_image_to_window(v->mlx, v->win, v->img, 0, 0);
-	return (0);
 }

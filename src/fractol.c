@@ -25,9 +25,9 @@ int	main(int ac, char **av)
 	init_struct(&v);
 	v.fractol = wich_f(ac, av);
 	fractol(&v);
+	mlx_put_image_to_window(v.mlx, v.win, v.img, 0, 0);
 	mlx_mouse_hook(v.win, mouse_hook, &v);
 	mlx_key_hook(v.win, key_hook, &v);
-	mlx_hook(v.win, 6, (1L << 8), &handle_motion, &v);
 	mlx_hook(v.win, 17, 0, &close_fractol, &v);
 	mlx_loop(v.mlx);
 }
@@ -55,9 +55,9 @@ void	fractol(t_data *vars)
 
 	x = 0;
 	y = 0;
-	while (x++ <= WIDTH)
+	while (++x < WIDTH)
 	{
-		while (y++ <= HEIGHT)
+		while (++y < HEIGHT)
 		{
 			if (vars->fractol == 0)
 				iter = mandelbrot(x, y, vars);
@@ -68,9 +68,9 @@ void	fractol(t_data *vars)
 			else if (vars->fractol == 3)
 				iter = dimention(x, y, vars);
 			if (iter == vars->max_iter)
-				pixel_put(vars, x, y, create_trgb(0, vars));
+				my_mlx_pixel_put(vars, x, y, create_trgb(0, vars));
 			else
-				pixel_put(vars, x, y, create_trgb(iter, vars));
+				my_mlx_pixel_put(vars, x, y, create_trgb(iter, vars));
 		}
 		y = 0;
 	}
@@ -90,6 +90,6 @@ void	init_struct(t_data *vars)
 	vars->r = 1;
 	vars->g = 1;
 	vars->b = 1;
-	vars->e_x = 2.085;
+	vars->e_x = 0.4;
 	vars->e_y = 0.1;
 }

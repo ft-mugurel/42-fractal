@@ -52,7 +52,6 @@ void	init_struct(t_data *vars);
 int		mouse_hook(int keycode, int x, int y, t_data *vars);
 int		key_hook(int keycode, t_data *vars);
 int		close_fractol(void);
-int		handle_motion(int x, int y, t_data *data);
 
 // zoom.c 3/5
 void	zoom(t_data *vars, int d, int x, int y);
@@ -75,7 +74,7 @@ int		julia(int px, int py, t_data *vars);
 int		burning_ship(int px, int py, t_data *vars);
 
 // mlx_utils.c 2/5
-void	pixel_put(t_data *data, int x, int y, int color);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int iter, t_data *v);
 
 // colors.c 1/5

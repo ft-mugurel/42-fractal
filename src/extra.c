@@ -37,13 +37,13 @@ int	dimention(int px, int py, t_data *vars)
 
 void	change_dimention(int code, t_data *v)
 {
-	if (code == 119)
+	if (code == 13)
 		v->e_x -= 0.1;
-	else if (code == 115)
+	else if (code == 1)
 		v->e_x += 0.1;
-	else if (code == 97)
+	else if (code == 0)
 		v->e_y -= 0.1;
-	else if (code == 100)
+	else if (code == 2)
 		v->e_y += 0.1;
 	fractol(v);
 	mlx_put_image_to_window(v->mlx, v->win, v->img, 0, 0);
