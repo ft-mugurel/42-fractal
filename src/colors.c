@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_utils.c                                        :+:      :+:    :+:   */
+/*   fractol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mugurel <muhammedtalhaugurel@gmai...>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,28 +12,20 @@
 
 #include "../include/fractol.h"
 
-void	pixel_put(t_data *data, int x, int y, int color)
+void	color_change(int code, t_data *v)
 {
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
-
-int	create_trgb(int iter, t_data *v)
-{
-	int	ranged_iter;
-	int	r;
-	int	g;
-	int	b;
-
-	ranged_iter = iter * 255;
-	ranged_iter = ranged_iter / 30;
-	r = ranged_iter;
-	g = ranged_iter;
-	b = ranged_iter;
-	r *= v->r;
-	g *= v->g;
-	b *= v->b;
-	return (0 << 24 | r << 16 | g << 8 | b);
+	if (code == 114 && v->r == 1)
+		v->r = 0;
+	else if (code == 114 && v->r != 1)
+		v->r += 0.2;
+	else if (code == 103 && v->g == 1)
+		v->g = 0;
+	else if (code == 103 && v->g != 1)
+		v->g += 0.2;
+	else if (code == 98 && v->b == 1)
+		v->b = 0;
+	else if (code == 98 && v->b != 1)
+		v->b += 0.2;
+	fractol(v);
+	mlx_put_image_to_window(v->mlx, v->win, v->img, 0, 0);
 }

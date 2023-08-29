@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_utils.c                                        :+:      :+:    :+:   */
+/*   burning_ship.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mugurel <muhammedtalhaugurel@gmai...>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,30 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../lib/mlx_lib/mlx.h"
 #include "../include/fractol.h"
+#include <math.h>
 
-void	pixel_put(t_data *data, int x, int y, int color)
+int	burning_ship(int px, int py, t_data *vars)
 {
-	char	*dst;
+	double	aa;
+	double	bb;
+	int		i;
+	double	a;
+	double	b;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
-
-int	create_trgb(int iter, t_data *v)
-{
-	int	ranged_iter;
-	int	r;
-	int	g;
-	int	b;
-
-	ranged_iter = iter * 255;
-	ranged_iter = ranged_iter / 30;
-	r = ranged_iter;
-	g = ranged_iter;
-	b = ranged_iter;
-	r *= v->r;
-	g *= v->g;
-	b *= v->b;
-	return (0 << 24 | r << 16 | g << 8 | b);
+	i = 0;
+	a = (vars->max_x - vars->min_x) * px / WIDTH + vars->min_x;
+	b = (vars->max_y - vars->min_y) * py / HEIGHT + vars->min_y;
+	while (i < vars->max_iter && (a * a) + (b * b) < 4)
+	{
+		aa = (a * a) - (b * b);
+		bb = 5.0 * fabs(a * b);
+		a = aa + (vars->max_x - vars->min_x) * px / WIDTH + vars->min_x;
+		b = bb + (vars->max_y - vars->min_y) * py / HEIGHT + vars->min_y;
+		i++;
+	}
+	return (i);
 }

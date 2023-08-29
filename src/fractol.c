@@ -11,108 +11,85 @@
 /* ************************************************************************** */
 
 #include "../lib/mlx_lib/mlx.h"
-#include "fractol.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "../include/fractol.h"
 
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+int	main(int ac, char **av)
 {
-	char	*dst;
+	t_data	v;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	v.mlx = mlx_init();
+	v.win = mlx_new_window(v.mlx, WIDTH, HEIGHT, "MTU");
+	v.img = mlx_new_image(v.mlx, WIDTH, HEIGHT);
+	v.addr = mlx_get_data_addr(v.img, &v.bits_per_pixel, &v.line_length,
+			&v.endian);
+	init_struct(&v);
+	v.fractol = wich_f(ac, av);
+	fractol(&v);
+	mlx_mouse_hook(v.win, mouse_hook, &v);
+	mlx_key_hook(v.win, key_hook, &v);
+	mlx_hook(v.win, 6, (1L << 8), &handle_motion, &v);
+	mlx_hook(v.win, 17, 0, &close_fractol, &v);
+	mlx_loop(v.mlx);
 }
 
-int	create_trgb(int t, int r, int g, int b, int iter)
+int	wich_f(int ac, char **av)
 {
-	t = 0;
-	//r = iter;
-	//g = iter;
-	//b = iter;
-	r *= iter;
-	g *= iter;
-	b *= iter;
-	r %= 256;
-	g %= 256;
-	b %= 256;
-
-	return (t << 24 | r << 16 | g << 8 | b);
-}
-
-void	render(t_data *vars, int d)
-{
-	if (d == 5)
-	{
-		mlx_clear_window(vars->mlx, vars->win);
-		vars->zoom += 1;
-		fractol(vars);
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
-	}
-	else if (d == 4)
-	{
-		mlx_clear_window(vars->mlx, vars->win);
-		vars->zoom -= 1;
-		fractol(vars);
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
-	}
-}
-
-int	mouse_hook(int keycode, int x, int y, t_data *vars)
-{
-	printf("Hello from key_hook!%d\n", keycode);
-	render(vars, keycode);
+	if (ac == 1)
+		return (0);
+	else if (!ft_strncmp(av[1], "mandelbrot", 10))
+		return (0);
+	else if (!ft_strncmp("julia", av[1], 5))
+		return (1);
+	else if (!ft_strncmp("burning_ship", av[1], 12))
+		return (2);
+	else if (!ft_strncmp("dimention", av[1], 9))
+		return (3);
 	return (0);
 }
 
-int	main(void)
+void	fractol(t_data *vars)
 {
-	t_data	vars;
+	int	x;
+	int	y;
+	int	iter;
 
-	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, 500, 400, "MTU");
-	vars.img = mlx_new_image(vars.mlx, 500, 400);
-	vars.addr = mlx_get_data_addr(vars.img, &vars.bits_per_pixel, &vars.line_length,
-								&vars.endian);
-	vars.zoom = 3;
-	fractol(&vars);
-	mlx_put_image_to_window(vars.mlx, vars.win, vars.img, 0, 0);
-	mlx_mouse_hook(vars.win, mouse_hook, &vars);
-	mlx_loop(vars.mlx);
+	x = 0;
+	y = 0;
+	while (x++ <= WIDTH)
+	{
+		while (y++ <= HEIGHT)
+		{
+			if (vars->fractol == 0)
+				iter = mandelbrot(x, y, vars);
+			else if (vars->fractol == 1)
+				iter = julia(x, y, vars);
+			else if (vars->fractol == 2)
+				iter = burning_ship(x, y, vars);
+			else if (vars->fractol == 3)
+				iter = dimention(x, y, vars);
+			if (iter == vars->max_iter)
+				pixel_put(vars, x, y, create_trgb(0, vars));
+			else
+				pixel_put(vars, x, y, create_trgb(iter, vars));
+		}
+		y = 0;
+	}
 }
 
-void	fractol(t_data *img)
+void	init_struct(t_data *vars)
 {
-	int	row;
-	int	col;
-	int width;
-	int height;
-	
-	row = 0;
-	col = 0;
-	width = 500;
-	height = 400;
-	while (row < 400)
-	{
-		while (col < 500)
-		{
-	    double c_re = (col - width/2)*img->zoom/width;
-	    double c_im = (row - height/2)*img->zoom/width;
-	    double x = 0, y = 0;
-	    int iteration = 0;
-	    while (x*x+y*y <= 4 && iteration < 255) {
-	        double x_new = x*x - y*y + c_re;
-	        y = 2*x*y + c_im;
-	        x = x_new;
-	        iteration++;
-	    }
-	    if (iteration < 255)
-				my_mlx_pixel_put(img, col, row, create_trgb(255, 150, 50, 25, iteration));
-		else 
-			my_mlx_pixel_put(img, col, row, create_trgb(255, 0, 0, 0, 0));
-			col++;
-		}
-		col = 0;
-		row++;
-	}
+	vars->max_y = HEIGHT / 200;
+	vars->min_y = HEIGHT / 200 * -1;
+	vars->max_x = WIDTH / 200;
+	vars->min_x = WIDTH / 200 * -1;
+	vars->max_iter = 30;
+	vars->cursor_x = 0;
+	vars->cursor_y = 0;
+	vars->right_click = 0;
+	vars->fractol = 0;
+	vars->r = 1;
+	vars->g = 1;
+	vars->b = 1;
+	vars->e_x = 2.085;
+	vars->e_y = 0.1;
 }

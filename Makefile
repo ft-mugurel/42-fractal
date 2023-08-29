@@ -10,12 +10,12 @@
 #                                                                              #
 #******************************************************************************#
 
-SRCS = ./src/fractol.c
+SRCS = ./src/fractol.c ./src/hooks.c ./src/mlx_utils.c ./src/mandelbrot.c ./src/julia.c ./src/burning_ship.c ./src/arrows.c ./src/zoom.c ./src/colors.c ./src/extra.c
 SRCBS = 
 NAME = fractol
 CC = gcc
 CFLAGS =  -g -fsanitize=address
-LFLAGS =  -lmlx -framework OpenGL -framework AppKit -L./lib/mlx_lib -lmlx -I./include/ -O2
+LFLAGS = -lXext -lX11 -lm -lz -L./lib/mlx_lib -lmlx -I./include/
 MLX = ./lib/mlx_lib/libmlx.a
 FT_PRINTF = ./lib/ft_printf/libftprintf.a
 GET_NEXT_LINE = ./lib/get_next_line/get_next_line.c ./lib/get_next_line/get_next_line_utils.c

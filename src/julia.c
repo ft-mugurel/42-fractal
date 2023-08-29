@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_utils.c                                        :+:      :+:    :+:   */
+/*   julia.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mugurel <muhammedtalhaugurel@gmai...>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,30 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../lib/mlx_lib/mlx.h"
 #include "../include/fractol.h"
 
-void	pixel_put(t_data *data, int x, int y, int color)
+int	julia(int px, int py, t_data *vars)
 {
-	char	*dst;
+	double	a;
+	double	b;
+	int		i;
+	double	aa;
+	double	bb;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
-
-int	create_trgb(int iter, t_data *v)
-{
-	int	ranged_iter;
-	int	r;
-	int	g;
-	int	b;
-
-	ranged_iter = iter * 255;
-	ranged_iter = ranged_iter / 30;
-	r = ranged_iter;
-	g = ranged_iter;
-	b = ranged_iter;
-	r *= v->r;
-	g *= v->g;
-	b *= v->b;
-	return (0 << 24 | r << 16 | g << 8 | b);
+	i = 0;
+	a = (vars->max_x - vars->min_x) * px / WIDTH + vars->min_x;
+	b = (vars->max_y - vars->min_y) * py / HEIGHT + vars->min_y;
+	while (i < vars->max_iter && a * a + b * b <= 16)
+	{
+		aa = a * a - b * b + 0.285;
+		bb = 2 * a * b + 0.01;
+		a = aa;
+		b = bb;
+		i++;
+	}
+	return (i);
 }
