@@ -16,7 +16,7 @@
 # define WIDTH 800
 
 # include "../lib/mlx_lib/mlx.h"
-# include "../lib/ft_printf/includes/libft.h"
+# include "../lib/libft/libft.h"
 # include <stdio.h>
 
 typedef struct s_data {
