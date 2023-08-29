@@ -31,7 +31,6 @@ LFLAGS = -framework OpenGL -framework AppKit -L./lib/mlx_lib -lmlx -I./include/
 MLX = ./lib/mlx_lib/libmlx.a
 FT_PRINTF = ./lib/ft_printf/libftprintf.a
 RM = rm -rf
-LIBC = ar -rcs
 
 all: $(MLX) ${NAME}
 
@@ -45,10 +44,14 @@ $(MLX) :
 	@make -C ./lib/mlx_lib
 
 $(FT_PRINTF) :
-	@make -C ./lib/ft_prin
+	@make -C ./lib/ft_printf
+
+re: fclean all
 
 clean:
 	${RM} ${OBJS} ${BOBJS}
+	@make clean -C ./lib/mlx_lib
+	@make clean -C ./lib/ft_printf
 
 fclean: clean
 	@rm -rf $(NAME)
