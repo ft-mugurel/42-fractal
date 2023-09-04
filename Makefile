@@ -66,6 +66,7 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
+	@rm -rf $(NAME_BONUS)
 	@make clean -C ./lib/mlx_lib
 	@make fclean -C ./lib/libft
 

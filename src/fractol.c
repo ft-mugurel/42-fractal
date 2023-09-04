@@ -17,13 +17,13 @@ int	main(int ac, char **av)
 {
 	t_data	v;
 
+	init_struct(&v);
+	v.fractol = wich_f(ac, av);
 	v.mlx = mlx_init();
 	v.win = mlx_new_window(v.mlx, WIDTH, HEIGHT, "MTU");
 	v.img = mlx_new_image(v.mlx, WIDTH, HEIGHT);
 	v.addr = mlx_get_data_addr(v.img, &v.bits_per_pixel, &v.line_length,
 			&v.endian);
-	init_struct(&v);
-	v.fractol = wich_f(ac, av);
 	fractol(&v);
 	mlx_put_image_to_window(v.mlx, v.win, v.img, 0, 0);
 	mlx_mouse_hook(v.win, mouse_hook, &v);
@@ -38,13 +38,14 @@ int	wich_f(int ac, char **av)
 		return (0);
 	else if (!ft_strncmp(av[1], "mandelbrot", 10))
 		return (0);
+	else if (!ft_strncmp("julia_variant", av[1], 9))
+		return (3);
 	else if (!ft_strncmp("julia", av[1], 5))
 		return (1);
 	else if (!ft_strncmp("burning_ship", av[1], 12))
 		return (2);
-	else if (!ft_strncmp("dimention", av[1], 9))
-		return (3);
-	return (0);
+	ft_putstr_fd("Wrong argument\n", 2);
+	exit(0);
 }
 
 void	fractol(t_data *vars)
