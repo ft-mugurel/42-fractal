@@ -31,13 +31,13 @@ int	key_hook(int keycode, t_data *v)
 		exit(0);
 	}
 	else if (keycode == 124)
-		right_arrow(v);
-	else if (keycode == 123)
 		left_arrow(v);
+	else if (keycode == 123)
+		right_arrow(v);
 	else if (keycode == 126)
-		up_arrow(v);
-	else if (keycode == 125)
 		down_arrow(v);
+	else if (keycode == 125)
+		up_arrow(v);
 	else if (keycode == 15)
 		color_change(keycode, v);
 	else if (keycode == 5)

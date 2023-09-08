@@ -30,13 +30,13 @@ int	key_hook(int keycode, t_data *v)
 		mlx_destroy_window(v->mlx, v->win);
 		exit(0);
 	}
-	else if (keycode == 124)
-		right_arrow(v);
 	else if (keycode == 123)
+		right_arrow(v);
+	else if (keycode == 124)
 		left_arrow(v);
-	else if (keycode == 126)
-		up_arrow(v);
 	else if (keycode == 125)
+		up_arrow(v);
+	else if (keycode == 126)
 		down_arrow(v);
 	else if (keycode == 15)
 		color_change(keycode, v);
